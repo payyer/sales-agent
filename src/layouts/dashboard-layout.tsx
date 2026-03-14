@@ -1,8 +1,17 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
+import nProgress from 'nprogress'
 import { Sidebar } from '@/components/shared/sidebar'
 import { Navbar } from '@/components/shared/navbar'
 
 export const DashboardLayout = () => {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    nProgress.start()
+    nProgress.done()
+  }, [pathname])
+
   return (
     <div className="min-h-screen bg-gray-50/50">
       <Navbar />
