@@ -1,73 +1,96 @@
-# React + TypeScript + Vite
+# 🚀 Payyer Modern React Starter Kit
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A professional, high-performance, and feature-rich foundation for building any modern web application.
+Built with the latest technologies to help you launch your project with confidence.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ Features
 
-## React Compiler
+- **Easy to use**: Simple folder structure.
+- **Fast**: Built with Vite 8 for quick development.
+- **Safe**: Full TypeScript support to find bugs early.
+- **Multilingual**: Support for English and Vietnamese (i18n).
+- **Responsive**: Works perfectly on Mobile, Tablet, and Desktop.
+- **Error Safety**: Application won't crash thanks to Error Boundaries.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🛠 Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Core**: React 19 + TypeScript
+- **Style**: Tailwind CSS 4 (Modern & Clean)
+- **State**: Zustand (Simple state management)
+- **Data**: TanStack Query & Table (Powerful data handling)
+- **Forms**: React Hook Form + Zod (Easy validation)
+- **Icons**: Lucide React
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 📂 Folder Structure
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+src/
+├── api/          # Global API client (Axios)
+├── components/
+│   ├── ui/       # Atomic components (Base UI)
+│   └── shared/   # Reusable parts (Data Tables, Layout parts)
+├── features/     # Logic by feature (e.g., Customers)
+├── hooks/        # Global custom React hooks
+├── layouts/      # Main page layouts (Dashboard, Auth)
+├── lib/          # Library configs (i18n, React Query)
+├── locales/      # Translation files (en/vi)
+├── pages/        # Main screens (Entry points)
+├── providers/    # App context providers
+├── routes/       # Router configuration
+├── stores/       # Global state (Zustand)
+└── types/        # Shared TypeScript interfaces
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🏃 How to Start
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Requirements
+
+Make sure you have **Node.js** installed on your computer.
+
+### 2. Install dependencies
+
+```bash
+npm install
 ```
+
+### 3. Set up environment
+
+Create a `.env` file and add:
+
+```env
+VITE_API_URL=https://api.example.com
+```
+
+### 4. Run development mode
+
+```bash
+npm run dev
+```
+
+---
+
+## 📝 Coding Standards
+
+1. **Features First**: Put logic related to a feature inside the `features/` folder.
+2. **Use Types**: Always define interfaces for your data.
+3. **Don't Repeat Yourself (DRY)**: Use components in `components/shared/` for common tasks.
+4. **Keep it Clean**: Run `npm run lint` before you commit code to keep the project beautiful.
+
+---
+
+## 📜 Scripts
+
+| Command          | Action                |
+| :--------------- | :-------------------- |
+| `npm run dev`    | Start local server    |
+| `npm run build`  | Build for production  |
+| `npm run lint`   | Check for code errors |
+| `npm run format` | Fix code style        |
