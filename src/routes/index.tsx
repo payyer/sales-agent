@@ -3,21 +3,32 @@ import { HomePage } from '@/pages/home'
 import { LoginPage } from '@/pages/auth/login'
 import NotFoundPage from '@/pages/not-found'
 import { ProtectedRoute } from './protected-route'
+import { DashboardLayout } from '@/layouts/dashboard-layout'
+import { AuthLayout } from '@/layouts/auth-layout'
 
 export const router = createBrowserRouter([
   {
-    path: '/login',
-    element: <LoginPage />,
+    element: <AuthLayout />,
+    children: [
+      {
+        path: '/login',
+        element: <LoginPage />,
+      },
+    ],
   },
   {
-    // Cấu trúc bọc các route cần bảo vệ
     element: <ProtectedRoute />,
     children: [
       {
-        path: '/',
-        element: <HomePage />,
+        element: <DashboardLayout />,
+        children: [
+          {
+            path: '/',
+            element: <HomePage />,
+          },
+          // Thêm các trang admin, profile... vào đây
+        ],
       },
-      // Thêm các trang admin, profile... vào đây
     ],
   },
   {
