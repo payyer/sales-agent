@@ -1,0 +1,36 @@
+{
+  "auth": {
+    "login_title": "Welcome Back",
+    "login_subtitle": "Enter your details to access the management system",
+    "email": "Email",
+    "password": "Password",
+    "login_button": "Login Now",
+    "logging_in": "Processing...",
+    "login_success": "Login successful!",
+    "login_failed": "Login failed",
+    "demo_notice": "Senior Setup Demo Version"
+  },
+  "common": {
+    "logout": "Logout",
+    "search": "Search...",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "dashboard": {
+    "overview": "System Overview",
+    "welcome": "Welcome back, here is what's happening today.",
+    "stats": {
+      "sales": "Sales",
+      "customers": "Customers",
+      "orders": "Orders",
+      "agents": "Agents"
+    },
+    "menu": {
+      "dashboard": "Dashboard",
+      "customers": "Customers",
+      "orders": "Orders",
+      "settings": "Settings"
+    }
+  }
+}

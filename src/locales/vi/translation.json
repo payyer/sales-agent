@@ -1,0 +1,36 @@
+{
+  "auth": {
+    "login_title": "Chào mừng trở lại",
+    "login_subtitle": "Nhập thông tin để truy cập hệ thống quản lý",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "login_button": "Đăng nhập ngay",
+    "logging_in": "Đang xử lý...",
+    "login_success": "Đăng nhập thành công!",
+    "login_failed": "Đăng nhập thất bại",
+    "demo_notice": "Bản thử nghiệm Senior Setup"
+  },
+  "common": {
+    "logout": "Đăng xuất",
+    "search": "Tìm kiếm...",
+    "loading": "Đang tải...",
+    "save": "Lưu",
+    "cancel": "Hủy"
+  },
+  "dashboard": {
+    "overview": "Tổng quan hệ thống",
+    "welcome": "Chào mừng bạn quay lại, đây là những gì đang diễn ra hôm nay.",
+    "stats": {
+      "sales": "Doanh số",
+      "customers": "Khách hàng",
+      "orders": "Đơn hàng",
+      "agents": "Đại lý"
+    },
+    "menu": {
+      "dashboard": "Bảng điều khiển",
+      "customers": "Khách hàng",
+      "orders": "Đơn hàng",
+      "settings": "Cài đặt"
+    }
+  }
+}
