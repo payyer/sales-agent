@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/features/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -31,6 +32,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>
 
 export const LoginPage = () => {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { setAuth } = useAuthStore()
 
@@ -43,7 +45,6 @@ export const LoginPage = () => {
   })
 
   const onSubmit = (data: LoginFormValues) => {
-    // Demo login logic
     toast.promise(
       new Promise((resolve) => {
         setTimeout(() => {
@@ -59,12 +60,12 @@ export const LoginPage = () => {
         }, 1000)
       }),
       {
-        loading: 'Đang xác thực...',
+        loading: t('auth.logging_in'),
         success: () => {
           navigate('/')
-          return 'Đăng nhập thành công!'
+          return t('auth.login_success')
         },
-        error: 'Đăng nhập thất bại',
+        error: t('auth.login_failed'),
       },
     )
   }
@@ -73,8 +74,8 @@ export const LoginPage = () => {
     <div className="flex min-h-screen items-center justify-center bg-gray-50/50 px-4">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold">Chào mừng trở lại</CardTitle>
-          <CardDescription>Nhập thông tin để truy cập hệ thống quản lý</CardDescription>
+          <CardTitle className="text-2xl font-bold">{t('auth.login_title')}</CardTitle>
+          <CardDescription>{t('auth.login_subtitle')}</CardDescription>
         </CardHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -84,7 +85,7 @@ export const LoginPage = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>{t('auth.email')}</FormLabel>
                     <FormControl>
                       <Input placeholder="name@example.com" {...field} />
                     </FormControl>
@@ -97,7 +98,7 @@ export const LoginPage = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Mật khẩu</FormLabel>
+                    <FormLabel>{t('auth.password')}</FormLabel>
                     <FormControl>
                       <Input type="password" {...field} />
                     </FormControl>
@@ -108,10 +109,10 @@ export const LoginPage = () => {
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
               <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? 'Đang xử lý...' : 'Đăng nhập ngay'}
+                {form.formState.isSubmitting ? t('auth.logging_in') : t('auth.login_button')}
               </Button>
               <div className="text-center text-xs text-muted-foreground uppercase">
-                Bản thử nghiệm Senior Setup
+                {t('auth.demo_notice')}
               </div>
             </CardFooter>
           </form>

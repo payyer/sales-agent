@@ -2,6 +2,7 @@ import { Menu, User } from 'lucide-react'
 import { useAppStore } from '@/stores/app.store'
 import { useAuthStore } from '@/features/auth'
 import { Button } from '@/components/ui/button'
+import { LanguageSwitcher } from './language-switcher'
 
 export const Navbar = () => {
   const { toggleSidebar } = useAppStore()
@@ -23,6 +24,7 @@ export const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-4">
+          <LanguageSwitcher />
           <div className="flex items-center gap-3 text-sm">
             <div className="hidden text-right sm:block">
               <p className="font-medium leading-none">{user?.name}</p>
