@@ -12,15 +12,23 @@ export const LoginPage = () => {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center">
-      <div className="rounded-lg border p-8 shadow-sm">
-        <h1 className="mb-4 text-xl font-bold">Đăng Nhập</h1>
-        <button
-          onClick={handleLogin}
-          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-        >
-          Login Demo
-        </button>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-8 rounded-2xl bg-white p-10 shadow-xl border border-gray-100">
+        <div className="text-center">
+          <h1 className="text-3xl font-extrabold text-gray-900">Chào mừng trở lại</h1>
+          <p className="mt-2 text-sm text-gray-600">Đăng nhập để quản lý đại lý của bạn</p>
+        </div>
+        <div className="mt-8 space-y-6">
+          <button
+            onClick={handleLogin}
+            className="group relative flex w-full justify-center rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          >
+            Vào ngay hệ thống
+          </button>
+          <div className="text-center text-xs text-gray-400">
+            Dành cho bản thử nghiệm Senior Setup
+          </div>
+        </div>
       </div>
     </div>
   )
