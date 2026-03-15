@@ -1,12 +1,14 @@
-export interface Product {
-  id: string
-  name: string
-  description?: string
-  price: number
-  images: string[]
+import type { Tables } from '@/types/database.types'
+
+// Basic Product type from Supabase
+export type Product = Tables<'products'>
+
+// If we need to ensure certain fields are not null for the UI,
+// or if we want to extend the DB type with UI-specific state.
+export interface ProductWithUI extends Product {
+  // Overriding some nullable fields from DB to be safer in UI
+  images: string[] // We can default to [] in the API layer
   category: string
-  stock: number
-  variants?: ProductVariant[]
 }
 
 export interface ProductVariant {
@@ -17,6 +19,8 @@ export interface ProductVariant {
   priceOverride?: number
 }
 
+// Since we don't have a 'categories' table yet, we can keep this manual
+// or derive it from the product category string if needed.
 export interface Category {
   id: string
   name: string

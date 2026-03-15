@@ -14,7 +14,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       <div className="relative aspect-3/4 overflow-hidden rounded-xl bg-muted/30">
         <Link to={`/product/${product.id}`} className="block h-full w-full">
           <img
-            src={product.images[0]}
+            src={product.images?.[0] || ''}
             alt={product.name}
             className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
           />
@@ -40,7 +40,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         <div className="flex items-start justify-between">
           <div className="flex flex-col">
             <span className="text-xs uppercase tracking-widest text-muted-foreground font-bold">
-              {product.category}
+              {product.category || 'Uncategorized'}
             </span>
             <Link to={`/product/${product.id}`} className="hover:underline">
               <h3 className="text-sm font-medium text-foreground">{product.name}</h3>
