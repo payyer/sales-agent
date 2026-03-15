@@ -1,10 +1,10 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import nProgress from 'nprogress'
-import { Sidebar } from '@/components/shared/sidebar'
 import { Navbar } from '@/components/shared/navbar'
+import { AgentRoot } from '@/features/sales-agent/components/AgentRoot'
 
-export const DashboardLayout = () => {
+export const MainLayout = () => {
   const { pathname } = useLocation()
 
   useEffect(() => {
@@ -13,16 +13,14 @@ export const DashboardLayout = () => {
   }, [pathname])
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
+    <div className="min-h-screen bg-white">
       <Navbar />
-      <div className="flex">
-        <Sidebar />
-        <main className="flex-1 px-4 py-8 lg:pl-72 lg:pr-8 pt-24">
-          <div className="mx-auto max-w-7xl">
-            <Outlet />
-          </div>
+      <div className="flex flex-col">
+        <main className="flex-1 pt-16">
+          <Outlet />
         </main>
       </div>
+      <AgentRoot />
     </div>
   )
 }

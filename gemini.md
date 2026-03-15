@@ -1,82 +1,222 @@
 # AI Coding Context & Guidelines (gemini.md)
 
-This document provides context for AI assistants (like Gemini, Claude, GitHub Copilot) to understand the **Payyer Modern React Starter Kit** architecture and coding standards.
+This document provides context for AI assistants to understand the **Sales Agent Demo** — a mini e-commerce clothing app whose primary purpose is to showcase an AI-powered sales agent feature.
 
 ---
 
-## 🏗 Project Overview
+## 🎯 Project Goal & Priorities
 
-- **Tech Stack**: React 19, Vite 8, TypeScript, Tailwind CSS 4, Zustand, TanStack (Query v5, Table v8).
-- **Architecture**: Feature-Driven Design (FDD). Logic is organized by domain/feature rather than technical role.
+This is **not** a full-featured e-commerce platform. It is a focused demo built around one core experience: an AI sales agent that helps users discover and purchase clothing.
 
----
+| Priority        | Area                                 | Approach                    |
+| --------------- | ------------------------------------ | --------------------------- |
+| 🔴 Primary      | `sales-agent` feature                | Build fully, iterate deeply |
+| 🟡 Secondary    | Product catalog, Cart, Checkout      | Minimal but functional      |
+| ⚫ Out of scope | Reviews, Wishlist, Admin, Promotions | Do not build unless asked   |
 
-## 📂 Architecture Map for AI
-
-When asked to add or modify features, follow this structure:
-
-- `src/features/[feature-name]/`: All domain-specific logic.
-  - `api/`: Service classes/functions (using `apiClient`).
-  - `hooks/`: Custom React Query hooks (e.g., `use[Feature]`).
-  - `types/`: TypeScript interfaces for this feature.
-  - `components/`: UI components used only by this feature.
-- `src/components/shared/`: Reusable high-level components (e.g., `DataTable`, `Form`).
-- `src/components/ui/`: Atomic UI elements (Buttons, Inputs - Shadcn/ui style).
-- `src/providers/`: Global context wrappers (QueryClient, ErrorBoundary, Toaster).
-- `src/stores/`: Global state using Zustand.
+**When in doubt:** keep e-commerce logic simple and redirect effort to the agent.
 
 ---
 
-## 🛠 Coding Rules & Patterns
+## 🏗 Tech Stack
 
-### 1. Unified API Client
+- **React 19**, Vite, TypeScript
+- **Tailwind CSS 4** for styling
+- **shadcn/ui** — primary UI component library (see UI rules below)
+- **Zustand** for global UI state (cart, agent session)
+- **TanStack Query v5** for server state
+- **react-hook-form** + **zod** for forms
+- **Architecture**: Feature-Driven Design (FDD)
 
-- Always use `@/api/api-client` for network requests.
-- Do not use `fetch` or raw `axios` instances.
-- Handle data transformation in the `service` layer within a feature.
+---
 
-### 2. State Management
+## 📂 Architecture Map
 
-- Use **React Query** for server state (fetching, caching).
-- Use **Zustand** for global UI state (auth status, settings).
-- Use `useState` for local component state.
+```
+src/
+├── features/
+│   ├── sales-agent/          ← PRIMARY FOCUS
+│   │   ├── api/              # Agent API calls (LLM, tool calls)
+│   │   ├── hooks/            # useAgent, useAgentSession, useAgentTools
+│   │   ├── types/            # AgentMessage, AgentTool, AgentState, etc.
+│   │   ├── tools/            # Tool definitions the agent can call
+│   │   └── components/       # AgentChat, MessageBubble, AgentToolCard, etc.
+│   │
+│   ├── products/             ← MINIMAL
+│   │   ├── api/              # Product listing & detail fetch
+│   │   ├── hooks/            # useProducts, useProductDetail
+│   │   ├── types/            # Product, ProductVariant, Category
+│   │   └── components/       # ProductCard, ProductGrid (simple, no frills)
+│   │
+│   └── cart/                 ← MINIMAL
+│       ├── hooks/            # useCart (wraps Zustand store)
+│       ├── types/            # CartItem, CartState
+│       └── components/       # CartDrawer, CartItemRow
+│
+├── components/
+│   ├── shared/               # DataTable, Form wrappers
+│   └── ui/                   # Atomic elements (Button, Input, Badge…)
+│
+├── stores/
+│   ├── cart.store.ts         # Cart items, quantity, total
+│   └── agent.store.ts        # Agent session, message history, tool state
+│
+├── providers/                # QueryClient, ErrorBoundary, Toaster
+└── pages/
+    ├── home/                 # Product listing (grid, basic filter)
+    ├── product/[id]/         # Product detail (minimal)
+    ├── cart/                 # Cart + checkout stub
+    └── agent/                # Full-screen agent experience (main demo page)
+```
 
-### 3. Forms & Validation
+---
 
-- Always use `react-hook-form` + `zod` schema.
-- Wrap inputs with the `FormField` component from `@/components/ui/form`.
+## 🤖 Sales Agent — Core Concepts
 
-### 4. Data Tables
+The agent is the heart of the app. Treat it as a first-class feature.
 
-- Use the `@/components/shared/data-table` component.
-- Pass `ColumnDef<T>` to define headers and cells.
-- Implementation must follow the headless pattern of TanStack Table.
+### Agent Tools (functions the agent can call)
 
-### 5. Styling
+Define each tool in `features/sales-agent/tools/`. Each tool file exports:
 
-- Use **Tailwind CSS 4**.
-- For complex components with variants, use `class-variance-authority` (CVA).
-- Separate variants into a `[component]-variants.ts` file to maintain Fast Refresh.
+```ts
+// Example: features/sales-agent/tools/search-products.tool.ts
+export const searchProductsTool: AgentTool = {
+  name: 'search_products',
+  description: '...',
+  parameters: z.object({ query: z.string(), category: z.string().optional() }),
+  execute: async (params) => {
+    /* call products API */
+  },
+}
+```
+
+### Agent Message Types
+
+```ts
+type MessageRole = 'user' | 'assistant' | 'tool_result'
+type AgentMessage = {
+  id: string
+  role: MessageRole
+  content: string
+  toolCall?: { name: string; args: unknown; result?: unknown }
+  timestamp: Date
+}
+```
+
+### Agent State (Zustand)
+
+```ts
+// stores/agent.store.ts
+interface AgentState {
+  messages: AgentMessage[]
+  isThinking: boolean
+  sessionId: string | null
+  // actions
+  sendMessage: (text: string) => Promise<void>
+  clearSession: () => void
+}
+```
+
+---
+
+## 🛒 E-commerce — Keep It Simple
+
+These features exist only to support the agent demo. Avoid over-engineering them.
+
+### Products
+
+- Simple `GET /products` with optional `?category=&q=` query params.
+- `Product` type: `{ id, name, price, images, category, variants, stock }`.
+- No pagination needed initially — a flat list is fine.
+
+### Cart
+
+- Managed entirely in **Zustand** (`cart.store.ts`). No backend cart.
+- Cart persists to `localStorage` via Zustand middleware.
+- Checkout is a stub form — no real payment integration.
+
+### Auth
+
+- Optional / minimal. A simple guest session is enough for the demo.
+- Do not build a full auth flow unless explicitly requested.
+
+---
+
+## 🛠 Coding Rules
+
+### General
+
+1. **No `any`** — use `unknown` if the type is truly dynamic.
+2. **Absolute imports** — always use the `@/` alias.
+3. **No semicolons**, **2-space indent** (Prettier config).
+4. **i18n** — use `useTranslation` + `t()` for all UI text.
+5. **Error handling** — throw meaningful errors in service layer; assume `ErrorBoundary` exists.
+6. **Lint & type check after every task** — when a task is complete, run:
+
+   ```bash
+   npm run lint
+   ```
+
+   - If errors are reported → fix **all** of them before considering the task done.
+   - Repeat until `npm run lint` exits with no errors.
+   - Do not suppress errors with `// eslint-disable` unless there is a documented reason.
+
+### API Client
+
+- Always use `@/api/api-client`. Never use raw `fetch` or `axios`.
+- Data transformation belongs in the `api/` layer of each feature.
+
+### Forms
+
+- `react-hook-form` + `zod` schema for all forms.
+- Wrap inputs with `FormField` from `@/components/ui/form`.
+
+### UI Components — shadcn/ui First
+
+- **Always prefer shadcn/ui** before writing any custom component. Check the shadcn registry first.
+- Install a component on demand with:
+  ```bash
+  npx shadcn@latest add [component-name]
+  # Examples:
+  npx shadcn@latest add button
+  npx shadcn@latest add dialog
+  npx shadcn@latest add scroll-area
+  ```
+- Installed components land in `src/components/ui/` — import from there: `@/components/ui/button`.
+- **Decision rule**:
+  - shadcn/ui has it → use it directly, do not rewrite.
+  - shadcn/ui doesn't have it → build a custom component in `components/shared/` or the feature's `components/` folder.
+- For custom components with variants, use `class-variance-authority` (CVA) and extract variants to a `[component]-variants.ts` file (Fast Refresh compatibility).
+- Tailwind CSS 4 utility classes for layout and one-off styling.
 
 ---
 
 ## 💬 AI Interaction Instructions
 
-When generating code for this project:
-
-1. **Forbidden `any`**: Never use the `any` type. Always define precise Interfaces/Types for variables, function parameters, and returns. If a type is truly unknown, use `unknown`.
-2. **Follow FDD**: If I ask for a "Product" feature, create it in `src/features/products`.
-3. **i18n Compliance**: Use the `useTranslation` hook and `t()` function for all user-facing text. Add keys to `src/locales/`.
-4. **Error Handling**: Assume the existence of an `ErrorBoundary`. Throw meaningful errors in services.
-5. **Absolute Imports**: Always use the `@/` alias for imports.
-6. **Automatic Self-Review**: After finishing a task, you MUST proactively review the code for logic errors, missing imports, or potential lint issues (especially regarding Fast Refresh and `import type`).
-7. **Code Formatting**: Strictly follow the project's Prettier configuration: **No semicolons** (`semi: false`) and **tab width of 2 spaces** (`tabWidth: 2`).
+1. **Agent-first mindset**: if a task touches both the agent and e-commerce, prioritize the agent's needs.
+2. **Follow FDD**: new features go in `src/features/[feature-name]/`.
+3. **Minimal e-commerce**: if asked to add an e-commerce feature not listed above, confirm scope before building.
+4. **Tool-use pattern**: when adding a new agent capability, always create a corresponding tool file in `features/sales-agent/tools/`.
+5. **State discipline**: agent session state → `agent.store.ts`; cart state → `cart.store.ts`; server data → React Query.
 
 ---
 
-## 📋 Example: Adding a new Feature
+## 📋 Example: Adding a new Agent Tool
 
-1. Define types in `features/[name]/types`.
-2. Create API service in `features/[name]/api`.
-3. Create custom hook in `features/[name]/hooks`.
-4. Create page in `pages/[name]` and register in `routes/index.tsx`.
+1. Define the Zod schema + `AgentTool` object in `features/sales-agent/tools/[tool-name].tool.ts`.
+2. Register the tool in `features/sales-agent/tools/index.ts`.
+3. Add the tool handler in the agent hook (`useAgent`).
+4. If the tool needs an API call, add the service function in `features/sales-agent/api/`.
+5. Optionally add a UI component in `features/sales-agent/components/` to render the tool result inline in chat.
+
+---
+
+## 📋 Example: Adding a new E-commerce Feature
+
+1. Confirm it's truly needed for the demo (keep scope minimal).
+2. Define types in `features/[name]/types/`.
+3. Create API service in `features/[name]/api/`.
+4. Create React Query hook in `features/[name]/hooks/`.
+5. Build minimal UI in `features/[name]/components/` or `pages/[name]/`.
+6. Register route in `routes/index.tsx`.
