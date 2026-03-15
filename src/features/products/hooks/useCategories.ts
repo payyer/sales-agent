@@ -2,7 +2,8 @@ import { useQuery } from '@tanstack/react-query'
 import { getCategories } from '../api/categories.api'
 
 /**
- * Hook to fetch and manage product categories.
+ * Custom hook for accessing product categories with built-in caching and
+ * loading states provided by TanStack Query.
  */
 export const useCategories = () => {
   return useQuery({
