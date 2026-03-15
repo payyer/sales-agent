@@ -152,7 +152,8 @@ These features exist only to support the agent demo. Avoid over-engineering them
 3. **No semicolons**, **2-space indent** (Prettier config).
 4. **i18n** — use `useTranslation` + `t()` for all UI text.
 5. **Error handling** — throw meaningful errors in service layer; assume `ErrorBoundary` exists.
-6. **Lint & type check after every task** — when a task is complete, run:
+6. **Comments in English** — all code comments must be written in clear, professional English. Explain _why_, not _what_. Avoid obvious comments that just restate the code.
+7. **Lint & type check after every task** — when a task is complete, run:
 
    ```bash
    npm run lint

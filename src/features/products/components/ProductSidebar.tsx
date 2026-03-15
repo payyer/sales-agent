@@ -7,6 +7,11 @@ import { useCategories } from '../hooks/useCategories'
 
 export const ProductSidebar = () => {
   const { t } = useTranslation()
+
+  /**
+   * We fetch categories dynamically from the database to ensure the sidebar
+   * filter always stays in sync with our inventory without manual code updates.
+   */
   const { data: categories, isLoading } = useCategories()
 
   return (

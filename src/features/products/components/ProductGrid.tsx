@@ -9,6 +9,10 @@ import { ProductCard } from './ProductCard'
 import { useProducts } from '../hooks/useProducts'
 
 export const ProductGrid = () => {
+  /**
+   * We leverage useProducts hook here to cleanly separate server state from UI logic.
+   * This ensures the grid automatically re-renders when the cache is invalidated.
+   */
   const { data: products, isLoading, isError, error } = useProducts()
 
   if (isLoading) {
@@ -26,6 +30,10 @@ export const ProductGrid = () => {
   }
 
   if (isError) {
+    /**
+     * Graceful error handling is crucial for a premium feel.
+     * We display the specific error message to help the user/developer debug issues.
+     */
     return (
       <div className="flex h-40 items-center justify-center rounded-xl bg-destructive/10 text-destructive text-sm font-medium">
         Error: {error instanceof Error ? error.message : 'Failed to load products'}
