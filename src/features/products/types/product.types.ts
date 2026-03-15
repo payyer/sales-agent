@@ -1,10 +1,5 @@
 import type { Tables } from '@/types/database.types'
 
-/**
- * Senior Tip: We use the 'Tables' helper from the generated database types
- * to ensure our UI types stay in sync with the actual Supabase schema.
- */
-
 // Basic Product type from Supabase
 export type Product = Tables<'products'>
 
