@@ -8,7 +8,7 @@
     "logging_in": "Processing...",
     "login_success": "Login successful!",
     "login_failed": "Login failed",
-    "demo_notice": "Senior Setup Demo Version"
+    "demo_notice": "Sales Agent Demo"
   },
   "common": {
     "logout": "Logout",
@@ -18,15 +18,10 @@
     "cancel": "Cancel"
   },
   "dashboard": {
-    "overview": "System Overview",
-    "welcome": "Welcome back, here is what's happening today.",
-    "stats": {
-      "sales": "Sales",
-      "customers": "Customers",
-      "orders": "Orders",
-      "agents": "Agents"
-    },
     "menu": {
+      "shop": "Shop",
+      "new_arrivals": "New Arrivals",
+      "about": "About",
       "dashboard": "Dashboard",
       "customers": "Customers",
       "orders": "Orders",

@@ -8,7 +8,7 @@
     "logging_in": "Đang xử lý...",
     "login_success": "Đăng nhập thành công!",
     "login_failed": "Đăng nhập thất bại",
-    "demo_notice": "Bản thử nghiệm Senior Setup"
+    "demo_notice": "Sales Agent Demo"
   },
   "common": {
     "logout": "Đăng xuất",
@@ -18,15 +18,10 @@
     "cancel": "Hủy"
   },
   "dashboard": {
-    "overview": "Tổng quan hệ thống",
-    "welcome": "Chào mừng bạn quay lại, đây là những gì đang diễn ra hôm nay.",
-    "stats": {
-      "sales": "Doanh số",
-      "customers": "Khách hàng",
-      "orders": "Đơn hàng",
-      "agents": "Đại lý"
-    },
     "menu": {
+      "shop": "Cửa hàng",
+      "new_arrivals": "Hàng mới về",
+      "about": "Giới thiệu",
       "dashboard": "Bảng điều khiển",
       "customers": "Khách hàng",
       "orders": "Đơn hàng",
