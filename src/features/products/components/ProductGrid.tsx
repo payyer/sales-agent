@@ -6,79 +6,41 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { ProductCard } from './ProductCard'
-import type { Product } from '../types/product.types'
-
-const MOCK_PRODUCTS: Product[] = [
-  // ... existing products (shortened for clarity in request)
-  {
-    id: '1',
-    name: 'Premium Essentials Hoodie',
-    price: 85.0,
-    category: 'Hoodies',
-    images: ['/products/hoodie-white.png'],
-    stock: 10,
-    description: null,
-    created_at: null,
-  },
-  {
-    id: '2',
-    name: 'Classic Midnight Hoodie',
-    price: 85.0,
-    category: 'Hoodies',
-    images: ['/products/hoodie-black.png'],
-    stock: 15,
-    description: null,
-    created_at: null,
-  },
-  {
-    id: '3',
-    name: 'Minimal Cotton Tee',
-    price: 45.0,
-    category: 'T-Shirts',
-    images: ['/products/tshirt-beige.png'],
-    stock: 20,
-    description: null,
-    created_at: null,
-  },
-  {
-    id: '4',
-    name: 'Oversized Sand Hoodie',
-    price: 95.0,
-    category: 'Hoodies',
-    images: ['/products/hoodie-white.png'],
-    stock: 5,
-    description: null,
-    created_at: null,
-  },
-  {
-    id: '5',
-    name: 'Daily Base Layer',
-    price: 35.0,
-    category: 'T-Shirts',
-    images: ['/products/tshirt-beige.png'],
-    stock: 25,
-    description: null,
-    created_at: null,
-  },
-  {
-    id: '6',
-    name: 'Structured Shell Jacket',
-    price: 185.0,
-    category: 'Outerwear',
-    images: ['/products/hoodie-black.png'],
-    stock: 8,
-    description: null,
-    created_at: null,
-  },
-]
+import { useProducts } from '../hooks/useProducts'
 
 export const ProductGrid = () => {
+  const { data: products, isLoading, isError, error } = useProducts()
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="flex flex-col gap-3 animate-pulse">
+            <div className="aspect-3/4 w-full rounded-xl bg-muted" />
+            <div className="h-4 w-2/3 rounded bg-muted" />
+            <div className="h-4 w-1/4 rounded bg-muted" />
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className="flex h-40 items-center justify-center rounded-xl bg-destructive/10 text-destructive text-sm font-medium">
+        Error: {error instanceof Error ? error.message : 'Failed to load products'}
+      </div>
+    )
+  }
+
+  const productCount = products?.length || 0
+
   return (
     <div className="flex flex-col gap-8">
       {/* Grid Toolbar */}
       <div className="flex items-center justify-between">
         <span className="text-sm text-muted-foreground font-medium">
-          Showing {MOCK_PRODUCTS.length} products
+          Showing {productCount} products
         </span>
         <div className="flex items-center gap-4">
           <Select defaultValue="newest">
@@ -96,7 +58,7 @@ export const ProductGrid = () => {
 
       {/* Grid */}
       <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-        {MOCK_PRODUCTS.map((product) => (
+        {products?.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
