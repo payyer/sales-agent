@@ -17,6 +17,8 @@ const MOCK_PRODUCTS: Product[] = [
     category: 'Hoodies',
     images: ['/products/hoodie-white.png'],
     stock: 10,
+    description: null,
+    created_at: null,
   },
   {
     id: '2',
@@ -25,6 +27,8 @@ const MOCK_PRODUCTS: Product[] = [
     category: 'Hoodies',
     images: ['/products/hoodie-black.png'],
     stock: 15,
+    description: null,
+    created_at: null,
   },
   {
     id: '3',
@@ -33,6 +37,8 @@ const MOCK_PRODUCTS: Product[] = [
     category: 'T-Shirts',
     images: ['/products/tshirt-beige.png'],
     stock: 20,
+    description: null,
+    created_at: null,
   },
   {
     id: '4',
@@ -41,6 +47,8 @@ const MOCK_PRODUCTS: Product[] = [
     category: 'Hoodies',
     images: ['/products/hoodie-white.png'],
     stock: 5,
+    description: null,
+    created_at: null,
   },
   {
     id: '5',
@@ -49,6 +57,8 @@ const MOCK_PRODUCTS: Product[] = [
     category: 'T-Shirts',
     images: ['/products/tshirt-beige.png'],
     stock: 25,
+    description: null,
+    created_at: null,
   },
   {
     id: '6',
@@ -57,6 +67,8 @@ const MOCK_PRODUCTS: Product[] = [
     category: 'Outerwear',
     images: ['/products/hoodie-black.png'],
     stock: 8,
+    description: null,
+    created_at: null,
   },
 ]
 
