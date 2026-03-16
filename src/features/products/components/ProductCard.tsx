@@ -2,12 +2,24 @@ import { Link } from 'react-router-dom'
 import { ShoppingCart } from 'lucide-react'
 import type { Product } from '../types/product.types'
 import { Button } from '@/components/ui/button'
+import { useCartStore } from '@/stores/cart.store'
+import type { ProductWithUI } from '../types/product.types'
+import { toast } from 'sonner'
 
 interface ProductCardProps {
   product: Product
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
+  const { addItem } = useCartStore()
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    addItem(product as ProductWithUI)
+    toast.success(`${product.name} added to cart!`)
+  }
+
   return (
     <div className="group relative flex flex-col gap-3">
       {/* Image Container */}
@@ -24,10 +36,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         <div className="absolute inset-x-4 bottom-4 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
           <Button
             className="w-full bg-white text-foreground hover:bg-foreground hover:text-background cursor-pointer shadow-lg border-none font-bold uppercase text-xs tracking-widest h-11 transition-colors duration-300"
-            onClick={(e) => {
-              e.preventDefault()
-              // TODO: Add to cart logic
-            }}
+            onClick={handleAddToCart}
           >
             <ShoppingCart className="mr-2 h-4 w-4" />
             Quick Add
