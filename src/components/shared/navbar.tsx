@@ -2,6 +2,8 @@ import { Search, ShoppingBag, Menu } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAppStore } from '@/stores/app.store'
+import { useCartStore } from '@/stores/cart.store'
+
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Separator } from '@/components/ui/separator'
@@ -9,6 +11,8 @@ import { Separator } from '@/components/ui/separator'
 export const Navbar = () => {
   const { t } = useTranslation()
   const { isSidebarOpen, toggleSidebar } = useAppStore()
+  const { getTotalItems } = useCartStore()
+  const totalItems = getTotalItems()
 
   return (
     <header className="fixed top-0 z-40 w-full border-b bg-white/80 backdrop-blur-md">
@@ -113,16 +117,20 @@ export const Navbar = () => {
               />
             </div>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative hover:bg-transparent cursor-pointer group transition-transform hover:scale-110 active:scale-95"
-            >
-              <ShoppingBag className="h-5 w-5" />
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-black text-[10px] font-bold text-white leading-none">
-                2
-              </span>
-            </Button>
+            <Link to="/cart">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative hover:bg-transparent cursor-pointer group transition-transform hover:scale-110 active:scale-95"
+              >
+                <ShoppingBag className="h-5 w-5" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-black text-[10px] font-bold text-white leading-none">
+                    {totalItems}
+                  </span>
+                )}
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
