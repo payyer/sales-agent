@@ -1,16 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
 import { getProducts, getProductById } from '../api/products.api'
+import type { ProductFilters } from '../types/product-filters.types'
 
 /**
  * Centralized hook to manage the global products list state.
- *
- * Using TanStack Query allows for efficient caching and avoids redundant
- * API calls as the user navigates between the home and agent pages.
+ * Accepts filters to handle dynamic searching and categorization.
  */
-export const useProducts = () => {
+export const useProducts = (filters?: ProductFilters) => {
   return useQuery({
-    queryKey: ['products'],
-    queryFn: getProducts,
+    queryKey: ['products', filters],
+    queryFn: () => getProducts(filters),
   })
 }
 

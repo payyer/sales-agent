@@ -1,6 +1,17 @@
-# AI Coding Context & Guidelines (gemini.md)
+# AI Coding Context & Guidelines (CLAUDE.md)
 
-This document provides context for AI assistants to understand the **Sales Agent Demo** — a mini e-commerce clothing app whose primary purpose is to showcase an AI-powered sales agent feature.
+This document provides **Claude** with essential context to understand and work effectively on the **Sales Agent Demo** — a mini e-commerce clothing app whose primary purpose is to showcase an AI-powered sales agent feature.
+
+---
+
+## 🤖 How Claude Uses This File
+
+**Important:** When you receive this file in your project folder or project context:
+
+- This is the **source of truth** for project decisions, architecture, and coding standards
+- Reference it continuously as you work — don't assume knowledge from prior conversations
+- If a task seems to conflict with this guidance, **flag the conflict** and ask for clarification rather than guessing
+- Use this to maintain consistency across multiple sessions and conversations
 
 ---
 
@@ -154,7 +165,6 @@ These features exist only to support the agent demo. Avoid over-engineering them
 5. **Error handling** — throw meaningful errors in service layer; assume `ErrorBoundary` exists.
 6. **Comments in English** — all code comments must be written in clear, professional English. Explain _why_, not _what_. Avoid obvious comments that just restate the code.
 7. **Lint & type check after every task** — when a task is complete, run:
-8. **Flat Conditional Rendering** — Always prefer the `&&` operator for conditional rendering to keep the JSX flat and readable. Avoid nested ternary operators (`condition ? (child ? a : b) : c`) which create "pyramid of doom" structures.
 
    ```bash
    npm run lint
@@ -192,15 +202,201 @@ These features exist only to support the agent demo. Avoid over-engineering them
 - For custom components with variants, use `class-variance-authority` (CVA) and extract variants to a `[component]-variants.ts` file (Fast Refresh compatibility).
 - Tailwind CSS 4 utility classes for layout and one-off styling.
 
+### Conditional Rendering — Keep It Flat
+
+Deeply nested ternary operators create "pyramid of doom" — extract logic into separate render functions or use the logical AND (`&&`) operator where appropriate.
+
+#### ❌ **Bad: Deeply Nested**
+
+```tsx
+{
+  isLoading ? <Skeleton /> : isError ? <Error /> : productCount === 0 ? <Empty /> : <Content />
+}
+```
+
+#### ✅ **Good: Flat with Early Returns**
+
+Extract into a separate component or use render functions:
+
+```tsx
+const renderContent = () => {
+  if (isLoading) return <Skeleton />
+  if (isError) return <Error />
+  if (productCount === 0) return <Empty />
+  return <Content />
+}
+
+export function MyComponent() {
+  return <div>{renderContent()}</div>
+}
+```
+
+#### ✅ **Also Good: Logical AND for Simple Cases**
+
+Use `&&` when you have **one primary condition** (loading/error) and simple success state:
+
+```tsx
+export function ProductGrid() {
+  return (
+    <>
+      {isLoading && <SkeletonGrid />}
+      {!isLoading && isError && <ErrorMessage error={error} />}
+      {!isLoading && !isError && (
+        <>
+          {productCount === 0 ? (
+            <EmptyState onClear={clearFilters} hasFilters={hasActiveFilters} />
+          ) : (
+            <ProductList products={products} />
+          )}
+        </>
+      )}
+    </>
+  )
+}
+```
+
+#### **Decision Rule**
+
+- **Multiple exclusive states** (loading, error, empty, success) → Use `renderContent()` function
+- **Single primary condition + success variant** → Use `&&` chaining
+- **Simple boolean toggle** → Use `&&` operator
+- **Never** nest ternaries more than 1 level deep in JSX
+
+#### **Example: Refactored Product Grid**
+
+**Before (Nested):**
+
+```tsx
+{
+  isLoading ? (
+    <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+      {[...Array(6)].map((_, i) => (
+        <div key={i} className="flex flex-col gap-3 animate-pulse">
+          <div className="aspect-3/4 w-full rounded-xl bg-muted" />
+          <div className="h-4 w-2/3 rounded bg-muted" />
+        </div>
+      ))}
+    </div>
+  ) : isError ? (
+    <div className="flex h-40 items-center justify-center rounded-xl bg-destructive/10">
+      Error: {error?.message}
+    </div>
+  ) : productCount === 0 ? (
+    <div className="flex flex-col items-center justify-center py-20">
+      <p className="text-muted-foreground mb-4">No products found</p>
+      {hasActiveFilters && (
+        <Button onClick={clearFilters} variant="outline" size="sm">
+          Clear filters
+        </Button>
+      )}
+    </div>
+  ) : (
+    <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+      {products?.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
+  )
+}
+```
+
+**After (Clean):**
+
+```tsx
+const renderProductGrid = () => {
+  if (isLoading) return <ProductGridSkeleton />
+  if (isError) return <ProductGridError error={error} />
+  if (productCount === 0)
+    return <ProductGridEmpty onClear={clearFilters} hasFilters={hasActiveFilters} />
+  return <ProductGridList products={products} />
+}
+
+export function ProductGrid() {
+  return <div className="space-y-6">{renderProductGrid()}</div>
+}
+```
+
+Or extract each state into its own component:
+
+```tsx
+function ProductGridSkeleton() {
+  return (
+    <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+      {[...Array(6)].map((_, i) => (
+        <div key={i} className="flex flex-col gap-3 animate-pulse">
+          <div className="aspect-3/4 w-full rounded-xl bg-muted" />
+          <div className="h-4 w-2/3 rounded bg-muted" />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function ProductGridError({ error }) {
+  return (
+    <div className="flex h-40 items-center justify-center rounded-xl bg-destructive/10 text-destructive text-sm font-medium">
+      Error: {error instanceof Error ? error.message : 'Failed to load products'}
+    </div>
+  )
+}
+
+function ProductGridEmpty({ onClear, hasFilters }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-20 text-center">
+      <p className="text-muted-foreground mb-4">No products found matching your current filters.</p>
+      {hasFilters && (
+        <Button onClick={onClear} variant="outline" size="sm">
+          Clear all filters
+        </Button>
+      )}
+    </div>
+  )
+}
+
+function ProductGridList({ products }) {
+  return (
+    <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+      {products?.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
+  )
+}
+
+export function ProductGrid() {
+  if (isLoading) return <ProductGridSkeleton />
+  if (isError) return <ProductGridError error={error} />
+  if (productCount === 0)
+    return <ProductGridEmpty onClear={clearFilters} hasFilters={hasActiveFilters} />
+  return <ProductGridList products={products} />
+}
+```
+
+**Benefits:**
+
+- ✅ Each state is **easy to test independently**
+- ✅ No nesting — **highly readable**
+- ✅ Easy to **reuse** components
+- ✅ Easier to **maintain and modify** individual states
+
 ---
 
-## 💬 AI Interaction Instructions
+## 💬 Claude's Working Principles
+
+### Decision-Making
 
 1. **Agent-first mindset**: if a task touches both the agent and e-commerce, prioritize the agent's needs.
 2. **Follow FDD**: new features go in `src/features/[feature-name]/`.
-3. **Minimal e-commerce**: if asked to add an e-commerce feature not listed above, confirm scope before building.
+3. **Minimal e-commerce**: if asked to add an e-commerce feature not listed in priorities above, **confirm scope before building** — ask the user for explicit approval.
 4. **Tool-use pattern**: when adding a new agent capability, always create a corresponding tool file in `features/sales-agent/tools/`.
 5. **State discipline**: agent session state → `agent.store.ts`; cart state → `cart.store.ts`; server data → React Query.
+
+### When in Doubt
+
+- **Ask, don't assume** — if the scope is ambiguous, ask the user before starting
+- **Check existing patterns** — reference the examples section below before writing new code
+- **Respect the guidelines** — if a shortcut violates these rules, don't take it; flag it and suggest the correct approach
+- **Incremental delivery** — ship small, working changes rather than massive refactors
 
 ---
 
@@ -216,9 +412,46 @@ These features exist only to support the agent demo. Avoid over-engineering them
 
 ## 📋 Example: Adding a new E-commerce Feature
 
-1. Confirm it's truly needed for the demo (keep scope minimal).
+1. **Confirm it's truly needed** for the demo (keep scope minimal) — if unsure, ask the user.
 2. Define types in `features/[name]/types/`.
 3. Create API service in `features/[name]/api/`.
 4. Create React Query hook in `features/[name]/hooks/`.
 5. Build minimal UI in `features/[name]/components/` or `pages/[name]/`.
 6. Register route in `routes/index.tsx`.
+
+---
+
+## ✅ Quality Checklist for Claude
+
+After completing any task, verify:
+
+- [ ] Code follows all rules in "Coding Rules" section
+- [ ] No `any` types used
+- [ ] All imports use `@/` alias
+- [ ] Comments explain _why_, not _what_
+- [ ] `npm run lint` exits with **zero errors**
+- [ ] Agent-first decisions made where applicable
+- [ ] If feature adds new e-commerce logic, it's minimal and justified
+- [ ] shadcn/ui preferred over custom components
+- [ ] Types are properly defined (no implicit `unknown`)
+- [ ] No console.log or debug code left behind
+- [ ] **Conditional rendering is flat** — no nested ternaries; use render functions or `&&` chains
+- [ ] **Complex states extracted** into separate components (Skeleton, Error, Empty, List, etc.)
+
+---
+
+## 🔗 File References
+
+- **Main config:** Look for `vite.config.ts`, `tsconfig.json`, `.prettierrc` in root
+- **API setup:** Check `src/api/api-client.ts` for patterns
+- **Store examples:** Reference `src/stores/cart.store.ts` for Zustand patterns
+- **UI patterns:** Browse `src/components/ui/` for installed shadcn components
+
+---
+
+## 📞 Communication
+
+- User asks → clarify scope if ambiguous
+- Suggest → provide reasoning before implementing
+- Report → if linting fails, include error output and fix before submitting
+- Iterate → if feedback comes, apply it and re-lint before re-submitting

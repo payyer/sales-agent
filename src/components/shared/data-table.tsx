@@ -27,11 +27,6 @@ interface DataTableProps<TData, TValue> {
   searchKey?: string
 }
 
-const coreRowModel = getCoreRowModel()
-const paginationRowModel = getPaginationRowModel()
-const sortedRowModel = getSortedRowModel()
-const filteredRowModel = getFilteredRowModel()
-
 export const DataTable = <TData, TValue>({
   columns,
   data,
@@ -45,12 +40,12 @@ export const DataTable = <TData, TValue>({
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: coreRowModel,
-    getPaginationRowModel: paginationRowModel,
+    getCoreRowModel: React.useMemo(() => getCoreRowModel(), []),
+    getPaginationRowModel: React.useMemo(() => getPaginationRowModel(), []),
     onSortingChange: setSorting,
-    getSortedRowModel: sortedRowModel,
+    getSortedRowModel: React.useMemo(() => getSortedRowModel(), []),
     onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: filteredRowModel,
+    getFilteredRowModel: React.useMemo(() => getFilteredRowModel(), []),
     onRowSelectionChange: setRowSelection,
     state: {
       sorting,
