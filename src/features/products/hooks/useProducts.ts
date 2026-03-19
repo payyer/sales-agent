@@ -13,16 +13,10 @@ export const useProducts = (filters?: ProductFilters) => {
   })
 }
 
-/**
- * Custom hook for fetching individual product details.
- *
- * 'id' is used as part of the query key to ensure specific item details are
- * cached independently, preventing state collisions in the UI.
- */
-export const useProductDetail = (id: string) => {
+export const useProductDetail = (id: string | undefined) => {
   return useQuery({
     queryKey: ['products', id],
-    queryFn: () => getProductById(id),
+    queryFn: () => (id ? getProductById(id) : Promise.resolve(null)),
     enabled: !!id,
   })
 }
