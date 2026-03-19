@@ -9,6 +9,8 @@ export interface ProductWithUI extends Product {
   // Overriding some nullable fields from DB to be safer in UI
   images: string[] // We can default to [] in the API layer
   category: string
+  sizes: string[]
+  colors: { name: string; hex: string }[]
 }
 
 export interface ProductVariant {
