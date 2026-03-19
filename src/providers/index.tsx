@@ -23,7 +23,22 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     >
       <QueryClientProvider client={queryClient}>
         {children}
-        <Toaster position="top-right" richColors closeButton />
+        <Toaster
+          position="bottom-right"
+          richColors={false}
+          closeButton
+          toastOptions={{
+            duration: 4000,
+            classNames: {
+              toast:
+                'group !bg-background/80 !backdrop-blur-md !text-foreground !border-border !rounded-xl !shadow-lg !font-medium !p-4',
+              description: '!text-muted-foreground !mt-1 !font-normal',
+              actionButton:
+                '!bg-primary !text-primary-foreground !rounded-lg hover:!bg-primary/90 transition-colors',
+              cancelButton: '!bg-muted !text-muted-foreground !rounded-lg',
+            },
+          }}
+        />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ErrorBoundary>

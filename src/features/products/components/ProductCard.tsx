@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
-import { ShoppingCart } from 'lucide-react'
+import { useNavigate, Link } from 'react-router-dom'
+import { ShoppingCart, CheckCircle2 } from 'lucide-react'
 import type { Product } from '../types/product.types'
 import { Button } from '@/components/ui/button'
 import { useCartStore } from '@/stores/cart.store'
@@ -11,13 +11,22 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
+  const navigate = useNavigate()
   const { addItem } = useCartStore()
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
     addItem(product as ProductWithUI)
-    toast.success(`${product.name} added to cart!`)
+
+    toast.success(`${product.name} added to bag`, {
+      description: 'Quick added from catalog',
+      icon: <CheckCircle2 className="w-5 h-5 text-green-500" />,
+      action: {
+        label: 'View Bag',
+        onClick: () => navigate('/cart'),
+      },
+    })
   }
 
   return (

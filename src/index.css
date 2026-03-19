@@ -85,4 +85,16 @@
       'rlig' 1,
       'calt' 1;
   }
+  /* Ensure all interactive elements have a pointer cursor */
+  button,
+  [role='button'],
+  select,
+  input[type='submit'],
+  input[type='reset'],
+  input[type='button'],
+  input[type='checkbox'],
+  input[type='radio'],
+  a {
+    cursor: pointer;
+  }
 }
