@@ -4,6 +4,8 @@ import NotFoundPage from '@/pages/not-found'
 import { MainLayout } from '@/layouts/main-layout'
 import { CartPage } from '@/pages/cart'
 
+import { ProductDetailPage } from '@/pages/product-detail'
+
 export const router = createBrowserRouter([
   {
     element: <MainLayout />,
@@ -15,6 +17,10 @@ export const router = createBrowserRouter([
       {
         path: '/cart',
         element: <CartPage />,
+      },
+      {
+        path: '/product/:id',
+        element: <ProductDetailPage />,
       },
     ],
   },
